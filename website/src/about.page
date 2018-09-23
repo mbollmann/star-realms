@@ -1,0 +1,12 @@
+---
+title: About
+in_menu: true
+in_sort: 90
+--- name:content
+# About
+
+Foo bar.
+{:.lead}
+
+
+Something about league organization and structure.

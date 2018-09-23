@@ -1,0 +1,52 @@
+$tier-color-iron: #AF5B46;
+$tier-color-bronze: #965A38;
+$tier-color-silver: #A8A8A8;
+$tier-color-gold: #C98910;
+$tier-color-platinum: #51636A;
+$tier-color-legends: #99A8C9;
+
+.list-group-item {
+  &.tier {
+    border-left-width: 12px;
+    border-left-style: solid;
+  }
+
+  &.tier-iron {
+    border-left-color: $tier-color-iron;
+  }
+  &.tier-bronze {
+    border-left-color: $tier-color-bronze;
+  }
+  &.tier-silver {
+    border-left-color: $tier-color-silver;
+  }
+  &.tier-gold {
+    border-left-color: $tier-color-gold;
+  }
+  &.tier-platinum {
+    border-left-color: $tier-color-platinum;
+  }
+  &.tier-legends {
+    border-left-color: $tier-color-legends;
+  }
+}
+
+.table {
+  &.standings {
+    max-width: 50em;
+  }
+
+  th.standings-rank, td.standings-rank {
+    max-width: 1em;
+  }
+  th.standings-num, td.standings-num {
+    max-width: 2em;
+  }
+  th.standings-rating, td.standings-rating {
+    max-width: 2.5em;
+    padding-right: 1em;
+  }
+  th.standings-pref, td.standings-pref {
+    max-width: 5em;
+  }
+}

@@ -1,0 +1,27 @@
+---
+title: Home
+in_menu: true
+in_sort: 1
+--- name:content
+# Archive of the BGG Star Realms League
+
+Keeping track of previous seasons, and providing statistics.
+{:.lead}
+
+{::options parse_block_html="true" /}
+
+<div class="alert alert-warning" role="alert">
+  **TODO:** Improve this landing page.
+</div>
+
+<div class="alert alert-info" role="alert">
+#### What is the BGG Star Realms League?
+
+A [Star Realms](http://www.starrealms.com/) tournament in the form of an ongoing league, with multiple tiers and divisions, that's organized by volunteers on [BoardGameGeek](https://www.boardgamegeek.com).  Find out more about how the league works in the [main announcement thread](https://boardgamegeek.com/thread/1354680/), or go to the [waiting list](https://boardgamegeek.com/thread/1318602/) if you wish to sign up.
+
+- - -
+
+#### What is Star Realms?
+
+A deck-building game by [White Wizard Games](http://www.whitewizardgames.com/) available in both physical (paper) and digital form.  Find out more on the [official Star Realms website](http://www.starrealms.com/).  Neither the BGG Star Realms League nor this website is in any form associated with White Wizard Games, but entirely run by volunteers.
+</div>

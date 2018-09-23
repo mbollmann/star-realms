@@ -1,0 +1,12 @@
++ [X] Maybe combine "Seasons" and "Logs" under a single menu heading "Archive"?
++ [ ] Parse expansion preferences properly
+  + [ ] Create expansion statistics over time
++ [ ] Improve landing page
+  + [ ] Player statistics over time?
+  + [ ] Links to important league threads, rules, etc.
++ [ ] Make some page listing all DCs and league helpers over time
+  + [ ] Refer to Matthew's post for the 30th anniversary (in the announcement thread)
++ [ ] Add dates to season overview?
+
+
++ [X] Add promotions and relegations to divisions.page

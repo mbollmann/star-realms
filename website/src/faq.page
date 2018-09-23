@@ -1,0 +1,59 @@
+---
+title: FAQ
+in_menu: true
+in_sort: 11
+--- name:content
+# Frequently Asked Questions
+
+Or maybe just questions that we anticipate being asked frequently.
+{:.lead}
+
+{::options parse_block_html="true" /}
+
+<div class="panel-group" role="tablist" area-multiselectable="true" id="accordion">
+
+<div class="panel panel-default">
+<div class="panel-heading" role="tab" id="faq1">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" aria-controls="collapse1">
+How are the player ratings calculated?
+</a></h4></div>
+<div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="faq1">
+<div class="panel-body">
+We created a whole page dedicated to explaining the <a href="{relocatable: ratings.html}">rating system</a>.
+</div></div></div>
+
+<div class="panel panel-default">
+<div class="panel-heading" role="tab" id="faq2">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true" aria-controls="collapse2">
+Some of the promotions and relegations seem wrong.  How are they determined?
+</a></h4></div>
+<div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="faq2">
+<div class="panel-body">
+The system of promotions and relegations is explained [in the first post of the main announcement thread](https://boardgamegeek.com/thread/1354680/).
+
+On this website, the main criterion for showing promotions and relegations is the actual roster of the following season; in other words, what tier a player actually played in.  For players who didn't return for the next season, promotions and relegations are calculated based on their standings, taking all tiebreakers into account.
+
+The actual promotions/relegations can differ from those calculated by the standings and tiebreakers for various reasons:
+
++ If **a player was promoted who shouldn't have been** (based on the standings), this may be due to a *bonus promotion.*  These are given at the discretion of the League Organizer, and typically happen when players drop out of the league, creating additional free spots that may be filled by promoting an additional player who otherwise wouldn't have been promoted.
+
++ If **a player wasn't relegated who should have been** (based on the standings), this may be due to a *relegation save,* for the same reasons outlined above.
+
++ If **a player wasn't promoted or was relegated** even though the standings would indicate otherwise, this could be due to a player's expansion preference in the higher tiers.  Platinum and Gold divisions play with fixed expansions.  If a player didn't own or didn't want to play with all the expansions in a division, this may have resulted in them missing out on a promotion or voluntarily being placed in a lower tier.
+</div></div></div>
+
+<div class="panel panel-default">
+<div class="panel-heading" role="tab" id="faq3">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="true" aria-controls="collapse3">
+Some of the promotions and relegations seem wrong.  How are they determined?
+</a></h4></div>
+<div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="faq3">
+<div class="panel-body">
+asdf
+</div></div></div>
+
+
+</div>

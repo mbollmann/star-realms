@@ -1,0 +1,25 @@
+---
+title: Archive
+in_menu: true
+in_sort: 7
+--- name:content
+<ol class="breadcrumb">
+  <li class="active">Archive</li>
+</ol>
+
+# Archives of all league matches
+
+Browse historical records of the league.
+{:.lead}
+
+<div class="list-group">
+  <a href="seasons.php" class="list-group-item">
+    <h4 class="list-group-item-heading">Browse by season</h4>
+    <p class="list-group-item-text">Look up previous matches by season/tier/division, and view final standings.</p>
+  </a>
+
+  <a href="log.html" class="list-group-item">
+    <h4 class="list-group-item-heading">Browse all matches</h4>
+    <p class="list-group-item-text">View a full list of all matches, with options to sort and filter results.</p>
+  </a>
+</div>

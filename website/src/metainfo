@@ -1,0 +1,20 @@
+--- paths
+/**/*.page:
+  blocks: {defaults: {pipeline: [erb,tags,kramdown,blocks]}}
+  template: /default.template
+  meta:
+    author: Amaroid (Marcel Bollmann)
+    description: Logs and statistics for past seasons of the BGG Star Realms League.
+
+fonts/*:
+  handler: copy
+
+/**/*.db:
+  handler: copy
+
+/**/*.php:
+  handler: copy
+
+--- alcn
+fonts/:
+  proxy_path: null

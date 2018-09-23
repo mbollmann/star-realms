@@ -1,0 +1,43 @@
+post_template:
+|
+  [size=12]Welcome to the BGG Star Realms League!
+  This thread is for the ${season} season of play.
+  The league rules can be found in the first post of the [thread=1354680]main announcement thread[/thread].  Here are some basic reminders:
+
+
+  Every player should subscribe not only to their own divisional thread, but also to the [thread=1354680]main announcement thread[/thread].  This is the [i]only[/i] place that we will post notification about upcoming seasons.  Additionally, [b]if any player fails to thumb or post in this thread before the start of round 3, that player is liable to be removed from the league without notice[/b] (unless we have received prior notification).
+
+  [b]If you anticipate being unavailable or on vacation in the next month, please notify your division commissioner as soon as possible.[/b]
+
+  Every match in this league is one game.
+
+  ${format}
+  [/size]
+
+
+  [b]If you have any questions[/b], please don't hesitate to post them (or geekmail your DC, if you prefer).
+
+  The Division Commissioner for this division is Star Realms player ${dc_ign}:
+   [user=${dc}][/user]
+
+  The League Commissioner is Star Realms player networktoast:
+   [user=toaster83][/user]
+
+
+  Here are the members of this division, in the format of Star Realms username, BGG username, and expansion preference:
+
+  ${members}
+
+  ${pairings}
+
+  ${bye_notice}
+
+bye_notice: "Note: [b]${bye_player}[/b] is not a player. This division only has 11 players, so if no replacement is found, one player each round will not have an assigned match."
+format:
+  single_format: "Games in this division should be played as [b][u]Type ${format}.[/u][/b]"
+  coreset_reminder: "Games in this division [b]should always be played with [u]${core}[/u] ${basesets}[/b] (${basesetreminder}).\n\n"
+  dual_format: "Games generally use expansions ${format}."
+  dual_format_empty: "Games generally don't use any (further) expansions."
+  no_format: "There is no set format for expansions."
+  lcd_explanation: "The appropriate expansions for each match are determined according to the \"lowest common denominator\" rule and will be shown alongside the pairings."
+  no_pref: "When two NP players are paired against each other, the first player to issue the challenge may choose the expansions."

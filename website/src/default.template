@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%
+    parent_title = context.node.parent.proxy_node(lang=context.node.lang).meta_info['routed_title'].to_s || context.node.parent.meta_info['title'].to_s
+    title = context.node.meta_info['title'].to_s
+    if parent_title.length > 1 and parent_title != title
+      title = parent_title + ": " + title
+    end
+  %>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="icon" href="../../favicon.ico"> -->
+
+    <title>BGG SRL - <%= title %></title>
+
+    <!-- Bootstrap -->
+    <link href="{relocatable: css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{relocatable: css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.css"/>
+    <link href="{relocatable: css/custom.css}" rel="stylesheet">
+ </head>
+
+  <body>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{relocatable: index.html}">BGG Star Realms League</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          {menu: {options: {mi: {in_menu: true}, sort: in_sort, lang: [null, node, fallback]}, style: nested, template: /menu.template, css_class: 'nav navbar-nav', item_selected_class: 'active'}}
+          <form method="get" action="player.php" class="navbar-form text-right" role="search">
+            <div class="input-group">
+              <input type="text" size="10" class="form-control" placeholder="Player Name" name="u"></input>
+              <div class="input-group-btn">
+                <button class="btn btn-default" type="submit">
+                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <main class="container">
+      <div>
+        <webgen:block name="content" />
+      </div>
+    </main><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{relocatable: js/jquery-3.2.0.min.js}"><\/script>')</script>
+    <script src="{relocatable: js/bootstrap.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{relocatable: js/ie10-viewport-bug-workaround.js}"></script>
+
+    <!-- DataTables and custom code (e.g. to activate data tables) -->
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/r-2.1.1/datatables.min.js"></script>
+    <script><webgen:block name="custom_script" notfound="ignore"/></script>
+  </body>
+</html>

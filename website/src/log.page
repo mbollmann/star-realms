@@ -1,0 +1,31 @@
+---
+title: Log
+in_menu: false
+in_sort: 10
+--- name:content
+<ol class="breadcrumb">
+  <li><a href="{relocatable: archive.html}">Archive</a></li>
+  <li class="active">Log</li>
+</ol>
+
+# Complete game log
+
+A list of all games that have been played in the league.
+{:.lead}
+
++ Use the **search field** to quickly look for specific results.  For example, you could enter "homer jtl" to quickly find all match results between players *HomerJr* and *JTLondon*.
+
++ **Click on player names** to quickly go to their individual statistics page.
+
++ **Click on seasons or divisions** to go to their respective archive pages.
+
+
+| Event       | Tier       | Division | Round | Player A | Player B | Result |
+|-------------|------------|----------|-------|----------|----------|--------|
+|             |            |          |       |          |          |        |
+{:.make-data-table .table .table-striped .table-bordered .table-responsive}
+
+--- name:custom_script pipeline:blocks
+var dataTablePageLength = 20;
+
+<webgen:block name="process_query_matches" chain="/query_matches.template" />

@@ -1,0 +1,125 @@
+---
+title: Seasons
+in_menu: false
+in_sort: 7
+dest_path: <parent><basename>.php
+--- name:content
+<webgen:block name="php_fetch_data" />
+<?php
+if ($season):
+?>
+<ol class="breadcrumb">
+  <li><a href="{relocatable: archive.html}">Archive</a></li>
+  <li><a href="{relocatable: seasons.php}">Seasons</a></li>
+  <li class="active"><?php echo $season; ?></li>
+</ol>
+<?php
+else:
+?>
+<ol class="breadcrumb">
+  <li><a href="{relocatable: archive.html}">Archive</a></li>
+  <li class="active">Seasons</li>
+</ol>
+<?php
+endif;
+?>
+
+# Archive of previous seasons
+
+Look up specific seasons or divisions.
+{:.lead}
+
+<?php
+if (!$season):
+?>
+  <webgen:block name="php_list_seasons" />
+<?php
+else:
+?>
+  <webgen:block name="php_list_divisions" />
+<?php
+endif;
+?>
+
+--- name:php_fetch_data pipeline:
+<?php
+$db = new SQLite3("seasons.db");
+$season = false;
+
+if (empty($_GET["q"])) {
+    $stmt = $db->prepare("SELECT name, COUNT(division) FROM events ".
+                         "GROUP BY name");
+    $results = $stmt->execute();
+    $events = array();
+    while ($row = $results->fetchArray(SQLITE3_NUM)) {
+        $events[$row[0]] = $row[1];
+    }
+
+    $stmt = $db->prepare("SELECT events.name, COUNT(playerinfo.player_id) FROM events ".
+                         "LEFT JOIN playerinfo ON playerinfo.event_id=events.id ".
+                         "GROUP BY events.name");
+    $results = $stmt->execute();
+    $playercount = array();
+    while ($row = $results->fetchArray(SQLITE3_NUM)) {
+        $playercount[$row[0]] = $row[1];
+    }
+}
+else {
+    $stmt = $db->prepare("SELECT id, name, tier, tier_rank, division FROM events ".
+                         "WHERE name=:name ".
+                         "ORDER BY tier_rank DESC, division ASC");
+    $stmt->bindValue(':name', $_GET["q"]);
+    $results = $stmt->execute();
+    $divisions = array();
+    while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+        $divisions[] = $row;
+    }
+
+    if (!empty($divisions)) {
+        $stmt = $db->prepare("SELECT COUNT(playerinfo.player_id) FROM events ".
+                             "LEFT JOIN playerinfo ON playerinfo.event_id=events.id ".
+                             "WHERE events.name=:name");
+        $stmt->bindValue(':name', $_GET["q"]);
+        $results = $stmt->execute();
+        $playercount = $results->fetchArray(SQLITE3_NUM)[0];
+        $season = $divisions[0]['name'];
+    }
+}
+
+?>
+
+--- name:php_list_seasons pipeline:
+<?php
+echo '<div class="list-group">';
+foreach ($events as $name => $divisions) {
+    echo '<a href="?q=' . urlencode($name) . '" class="list-group-item">';
+    echo '<h4 class="list-group-item-heading">' . $name . '</h4>';
+    echo '<p class="list-group-item-text">';
+    echo $playercount[$name] . ' players, ' . $divisions . ' divisions';
+    echo '</p></a>';
+}
+echo '</div>';
+?>
+
+--- name:php_list_divisions pipeline:
+<?php
+echo '<div class="list-group">';
+echo '<a href="#" class="list-group-item active">';
+echo '<h4 class="list-group-item-heading">' . $divisions[0]['name'] . '</h4>';
+echo '<p class="list-group-item-text">';
+echo $playercount . ' players, ' . count($divisions) . ' divisions';
+echo '</p></a>';
+
+foreach ($divisions as $div) {
+    echo '<a href="divisions.php?id=' . $div['id'] . '" ';
+    echo 'class="list-group-item tier tier-' . strtolower($div['tier']) . '">';
+    echo $div['tier'] . ' Tier';
+    if ($div['tier'] != $div['division']) {
+        echo ', ' . $div['division'] . ' Division';
+    }
+    echo '</a>';
+}
+
+echo '</div>';
+
+?>

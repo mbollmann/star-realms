@@ -1,0 +1,307 @@
+---
+title: Player Stats
+in_menu: false
+in_sort: 3
+dest_path: <parent><basename>.php
+--- name:content pipeline:blocks,tags
+<webgen:block name="php_fetch_statistics" />
+<?php
+if (!$player):
+   if (!empty($_GET["u"])):
+       $message = "<strong>Error:</strong> player \"" . htmlspecialchars($_GET["u"]) . "\" not found!";
+   else:
+       $message = "<strong>Error:</strong> no player name supplied!";
+   endif;
+?>
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <?php echo $message; ?>
+</div>
+<?php
+
+  if (!empty($player_sugg)):
+?>
+<div>
+  <h3>Did you mean...</h3>
+  <p><ul>
+<?php
+  foreach ($player_sugg as $suggestion) {
+      echo '<li><a href="{relocatable: /player.php}?u=' . rawurlencode($suggestion[0]) . '">';
+      echo $suggestion[0] . " (" . $suggestion[1] . ")";
+      echo '</a></li>';
+  }
+?>
+  </ul></p>
+</div>
+<?php
+  endif;
+else:
+?>
+<webgen:block name="player_stats" />
+<?php
+endif;
+?>
+
+--- name:player_stats
+<webgen:block name="player_links" />
+
+# Player statistics for "<?php echo(htmlspecialchars($player["sr_name"])); ?>"
+
+BGG username: <?php echo htmlspecialchars($player["bgg_name"]); ?> \\
+Average win percentage: <?php echo sprintf("%.2f%%", ($player["games_won"] / $player["games_total"]) * 100); ?> \\
+[Rating](/ratings.html): <?php echo $player["current_rating"]; ?>
+{:.lead}
+
+<webgen:block name="player_ratings" />
+<webgen:block name="player_events" />
+<webgen:block name="player_matches" />
+
+--- name:player_links pipeline:
+<?php
+$psr_url = "https://prostarrealms.com/player.php?name=" . rawurlencode($player["sr_name"]);
+$bgg_url = "https://boardgamegeek.com/user/" . rawurlencode($player["bgg_name"]);
+?>
+<div class="btn-group pull-right" role="group" aria-label="Profiles on other sites">
+  <a class="btn btn-info" href="<?php echo $bgg_url; ?>">Look up on BoardGameGeek</a>
+  <a class="btn btn-info" href="<?php echo $psr_url; ?>">Look up on ProStarRealms</a>
+</div>
+
+--- name:player_ratings pipeline:
+<?php if(count($player["events"]) > 1): ?>
+<div class="row">
+  <div class="col-md-8">
+    <canvas id="chartRatings"></canvas>
+  </div>
+  <div class="col-md-4">
+    <canvas id="chartTiers"></canvas>
+  </div>
+</div>
+<?php endif; ?>
+
+--- name:player_events pipeline:kramdown
+## Season summaries
+
+<div>
+<table class="table table-striped table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Tier</th>
+      <th>Division</th>
+      <th>Preference</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+<?php
+    foreach($player["events"] as $event) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($event["event"]) . "</td>";
+        echo "<td>" . htmlspecialchars($event["tier"]) . "</td>";
+        echo "<td><a href=\"divisions.php?id=" . $event["event_id"] . "\">" . htmlspecialchars($event["division"]) . "</a></td>";
+        echo "<td>" . htmlspecialchars($event["pref"]) . "</td>";
+        echo "<td>" . $event["result"] . "</td>";
+        echo "</tr>";
+    }
+?>
+  </tbody>
+</table>
+</div>
+
+--- name:player_matches pipeline:kramdown
+{::options parse_block_html="true" /}
+
+## All matches by this player
+
+<div>
+| Event       | Tier       | Division | Round | Player A | Player B | Result |
+|-------------|------------|----------|-------|----------|----------|--------|
+|             |            |          |       |          |          |        |
+{:.make-data-table .table .table-striped .table-bordered .table-responsive}
+</div>
+
+{::options parse_block_html="false" /}
+
+--- name:php_fetch_statistics pipeline:
+<?php
+$player_sugg = array();
+if (empty($_GET["u"])) {
+  $player = null;
+}
+else {
+  $db = new SQLite3("seasons.db");
+  $stmt = $db->prepare("SELECT id, bgg_name, sr_name FROM players WHERE sr_name LIKE :name");
+  $stmt->bindValue(':name', $_GET["u"]);
+  $player = $stmt->execute();
+  $player = $player->fetchArray(SQLITE3_ASSOC);
+
+  if (!$player) { // try looking up BGG name instead
+    $stmt = $db->prepare("SELECT id, bgg_name, sr_name FROM players WHERE bgg_name LIKE :name");
+    $stmt->bindValue(':name', $_GET["u"]);
+    $player = $stmt->execute();
+    $player = $player->fetchArray(SQLITE3_ASSOC);
+  }
+
+  if (!$player) { // find suggestions
+    $stmt = $db->prepare("SELECT id, bgg_name, sr_name FROM players ".
+                         "WHERE sr_name LIKE :name OR bgg_name LIKE :name LIMIT 10");
+    $searchTerm = "%" . $_GET["u"] . "%";
+    $stmt->bindValue(':name', $searchTerm);
+    $results = $stmt->execute();
+    while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+      $player_sugg[] = array($row["sr_name"], $row["bgg_name"]);
+    }
+  }
+}
+
+if ($player) {
+    $stmt = <<<SQL
+      SELECT DISTINCT name FROM events
+      ORDER BY id ASC
+SQL;
+    $result = $db->query($stmt);
+    $all_events = array();
+    while($row = $result->fetchArray(SQLITE3_NUM)) {
+        $all_events[] = $row[0];
+    }
+
+    $player["events"] = array();
+    $player["tiers"] = array(
+        "Iron" => 0, "Bronze" => 0, "Silver" => 0, "Gold" => 0, "Platinum" => 0, "Legends" => 0
+    );
+    $player["rating_history"] = array("events" => array(), "ratings" => array());
+    $player["games_total"] = 0;
+    $player["games_won"] = 0;
+
+    $stmt = <<<SQL
+      SELECT events.name AS event, events.tier, events.division, preferences.pref,
+             events.id AS event_id,
+             playerinfo.rating AS rating,
+             playerinfo.games_won AS games_won,
+             playerinfo.games_played AS games_total
+             FROM playerinfo
+        LEFT JOIN events ON events.id=playerinfo.event_id
+        LEFT JOIN preferences ON preferences.id=playerinfo.preference
+            WHERE playerinfo.player_id=:pid
+         ORDER BY events.id ASC
+SQL;
+    $stmt = $db->prepare($stmt);
+    $stmt->bindValue(':pid', $player['id']);
+    $result = $stmt->execute();
+    while($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $player["events"][$row["event"]] = $row;
+        $player["games_total"] = $player["games_total"] + $row["games_total"];
+        $player["games_won"] = $player["games_won"] + $row["games_won"];
+        $games_lost = $row["games_total"] - $row["games_won"];
+        $event_result = (string)$row["games_won"] . "&ndash;" . (string)$games_lost;
+        $player["events"][$row["event"]]["result"] = $event_result;
+        $event_rating = round($row["rating"], 2);
+        $player["events"][$row["event"]]["rating"] = $event_rating;
+        $player["current_rating"] = $event_rating;
+        $player["tiers"][$row["tier"]] += 1;
+        $last_played_event = $row["event"];
+    }
+    $has_played = false;
+    foreach($all_events as $event_name) {
+        if(array_key_exists($event_name, $player["events"])) {
+            $rating = $player["events"][$event_name]["rating"];
+            $player["rating_history"]["events"][] = $event_name;
+            $player["rating_history"]["ratings"][] = $rating;
+            $has_played = true;
+            if($event_name == $last_played_event) {
+                break;
+            }
+        }
+        elseif($has_played) {
+            // player skipped this season
+            $player["rating_history"]["events"][] = $event_name;
+            $player["rating_history"]["ratings"][] = NULL;
+        }
+    }
+
+?>
+    <script type="text/javascript">
+        var SR_PLAYER="<?php echo $player['sr_name']; ?>";
+        var SR_EVENTS=['<?php echo join("','", $player["rating_history"]["events"]); ?>'];
+        var SR_RATINGS=[<?php echo join(",", $player["rating_history"]["ratings"]); ?>];
+        var SR_TIERS=['<?php echo join("','", array_keys($player["tiers"])); ?>'];
+        var SR_TIER_SEASONS=[<?php echo join(",", array_values($player["tiers"])); ?>];
+    </script>
+<?php
+}
+?>
+
+--- name:custom_script pipeline:blocks
+<webgen:block name="process_query_matches" chain="/query_matches.template" />
+
+var ctx = document.getElementById("chartRatings").getContext('2d');
+var chartRatings = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: SR_EVENTS,
+        datasets: [{
+            label: 'Post-season rating',
+            data: SR_RATINGS,
+            cubicInterpolationMode: 'monotone',
+            borderColor: '#175799',
+            fill: false,
+            spanGaps: true
+        }]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value; //.replace("Season ", "");
+                    }
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 20,
+                    suggestedMax: 100
+                }
+            }]
+        }
+    }
+});
+
+var SR_TIER_COLORS = [
+    '#AF5B46', // Iron
+    '#965A38', // Bronze
+    '#A8A8A8', // Silver
+    '#C98910', // Gold
+    '#51636A', // Platinum
+    '#99a8c9'  // Legends
+];
+
+ctx = document.getElementById("chartTiers").getContext('2d');
+var chartTiers = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: SR_TIERS,
+        datasets: [{
+            backgroundColor: SR_TIER_COLORS,
+            data: SR_TIER_SEASONS
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "# Seasons played per tier",
+            position: 'bottom'
+        },
+        legend: {
+            labels: {
+                filter: function(legendItem, data) {
+                    // Filter out tiers the player hasn't played in (value == 0)
+                    var idx = data.labels.indexOf(legendItem.text);
+                    var value = data.datasets[0].data[idx];
+                    return value > 0;
+                }
+            },
+            position: 'bottom'
+        }
+    }
+});

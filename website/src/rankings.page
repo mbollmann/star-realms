@@ -1,0 +1,86 @@
+---
+title: Rankings
+in_menu: true
+in_sort: 4
+--- name:content
+<div class="btn-group pull-right" role="group" aria-label="Further information">
+  <a class="btn btn-info" href="{relocatable: /ratings.html}">More information on the rating system</a>
+</div>
+
+# Rankings
+
+Lifetime statistics for all players in the league.
+{:.lead}
+
++ Use the **search field** to find specific players.
+
++ **Click on player names** to quickly go to their individual statistics page.
+
++ **Click on column headers** to sort the table.
+
+
+| Player      | BGG Name   | Rating | Seasons Played  | Lifetime Record | Win Percentage |
+|-------------|------------|--------|-----------------|-----------------|----------------|
+|             |            |        |                 |                 |                |
+{:.make-data-table .table .table-striped .table-bordered .table-responsive}
+
+--- name:custom_script pipeline:blocks,tags
+var ajaxURL_query = "{relocatable: /query_lifetime.php}";
+
+var markup_playername = function(data, type, row) {
+  var winner = row['srname_winner'];
+  var markup = data;
+  if (!data) {
+    return "** BYE **";
+  }
+  markup = "<a href=\"{relocatable: /player.php}?u=" +
+              encodeURIComponent(data) + "\">" + data + "</a>";
+  if(data == winner) {
+    return "<strong>" + markup + "</strong>";
+  } else {
+    return markup;
+  }
+}
+
+$(document).ready(function() {
+  var table = $('.make-data-table').DataTable({
+    "dom": "ifrtp",
+    "order": [],
+    // "scrollY": "50vh",
+    // "scrollCollapse": true,
+    "paging": true,
+    "pagingType": "simple_numbers",
+    "pageLength": 20,
+    "serverSide": true,
+    "ajax": ajaxURL_query,
+    "columns": [
+      {"data": "sr_name",
+       "render": markup_playername
+      },
+      {"data": "bgg_name"
+      },
+      {"data": "rating",
+       "width": "6em",
+       "render": function(data) {
+         return data.toFixed(2);
+       }
+      },
+      {"data": "events_total",
+       "width": "6em"
+      },
+      {"data": "games_won",
+       "width": "6em",
+       "render": function(data, type, row) {
+         return row['games_won'] + "&ndash;" + row['games_lost'];
+       }
+      },
+      {"data": "win_percentage",
+       "width": "6em"
+      }
+    ],
+    "order": [[2, "desc"]]
+  });
+  $( window ).resize(function() {
+    table.columns.adjust().draw();
+  });
+} );

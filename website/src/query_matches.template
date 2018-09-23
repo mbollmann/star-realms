@@ -1,0 +1,99 @@
+--- name:process_query_matches pipeline:tags
+var ajaxURL_query_matches = "{relocatable: /query_matches.php}";
+if (typeof SR_PLAYER !== 'undefined') {
+  ajaxURL_query_matches = ajaxURL_query_matches + "?only=" + encodeURIComponent(SR_PLAYER);
+} else if (typeof SR_SHOW_DIVISION !== 'undefined') {
+  ajaxURL_query_matches = ajaxURL_query_matches + "?event=" + encodeURIComponent(SR_SHOW_DIVISION);
+} else {
+  var SR_PLAYER = null;
+}
+
+if (typeof dataTablePageLength === 'undefined') {
+  var dataTablePageLength = 11;
+}
+
+var markup_season = function(data, type, row) {
+  if (type !== 'display') {
+    return data;
+  }
+  return "<a href=\"{relocatable: /seasons.php}?q=" +
+          encodeURIComponent(data) + "\">" + data + "</a>";
+}
+
+var markup_division = function(data, type, row) {
+  if (type !== 'display') {
+    return data;
+  }
+  if (typeof SR_SHOW_DIVISION !== 'undefined') {
+    return data;
+  }
+  var eventid = row['event_id'];
+  return "<a href=\"{relocatable: /divisions.php}?id=" + eventid + "\">" + data + "</a>";
+}
+
+var markup_playername = function(data, type, row) {
+  if (type !== 'display') {
+    return data;
+  }
+  var winner = row['srname_winner'];
+  var markup = data;
+  if (!data) {
+    return "** BYE **";
+  }
+  if(data == SR_PLAYER) {
+    markup = "<a href=\"#\">" + data + "</a>";
+  } else {
+    markup = "<a href=\"{relocatable: /player.php}?u=" +
+                encodeURIComponent(data) + "\">" + data + "</a>";
+  }
+  if(data == winner) {
+    return "<strong>" + markup + "</strong>";
+  } else {
+    return markup;
+  }
+}
+
+$(document).ready(function() {
+  var table = $('.make-data-table').DataTable({
+    "dom": "ifrtp",
+    "order": [],
+    // "scrollY": "50vh",
+    // "scrollCollapse": true,
+    "paging": true,
+    "pagingType": "simple_numbers",
+    "pageLength": dataTablePageLength,
+    "serverSide": true,
+    "ajax": ajaxURL_query_matches,
+    "columns": [
+      {"data": "event",
+       "width": "6em",
+       "render": markup_season
+      },
+      {"data": "tier",
+       "width": "6em"
+       },
+      {"data": "division",
+       "width": "6em",
+       "render": markup_division
+       },
+      {"data": "round",
+       "width": "3em"
+      },
+      {"data": "srname_a",
+       "render": markup_playername
+      },
+      {"data": "srname_b",
+       "render": markup_playername
+      },
+      {"data": "result",
+       "render": function(data, type, row) {
+                   return "<em>" + data + "</em>";
+                 },
+       "width": "12em"
+      }
+    ]
+  });
+  $( window ).resize(function() {
+    table.columns.adjust().draw();
+  });
+} );

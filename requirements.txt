@@ -1,0 +1,5 @@
+lxml
+BeautifulSoup4
+better_exceptions
+trueskill
+numpy
