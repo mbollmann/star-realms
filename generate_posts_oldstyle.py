@@ -12,10 +12,7 @@ import yaml
 from star_realms import LeagueSheet, lcd
 from utils import num_to_adj
 
-BGG_URL="https://boardgamegeek.com/article/create/thing/147020/194"
-BGG_TITLE="Post a Message | BoardGameGeek"
-BGG_USER="Amaroid"
-BGG_PASSWORD="oxoyokurBGG"
+#BGG_URL="https://boardgamegeek.com/article/create/thing/147020/194"
 
 DC_OVERRIDES = {
     'horowits': {'BGG Name': 'horowits'}
@@ -23,7 +20,8 @@ DC_OVERRIDES = {
 
 class PostGenerator:
     def __init__(self, args):
-        self.browser = args.browser
+        self.browser = False
+        #self.browser = args.browser
         self.template = yaml.load(args.template)
         self.season = args.season
         self.sheet = LeagueSheet(args.indir, args.season)
@@ -147,10 +145,10 @@ if __name__ == "__main__":
                         metavar='DIR',
                         type=str,
                         help='Directory with league spreadsheet as HTML export')
-    parser.add_argument('-b', '--browser',
-                        action="store_true",
-                        default=False,
-                        help='Open Chromium browser tabs for posts (default: output to STDOUT)')
+    #parser.add_argument('-b', '--browser',
+    #                    action="store_true",
+    #                    default=False,
+    #                    help='Open Chromium browser tabs for posts (default: output to STDOUT)')
     parser.add_argument('-s', '--season',
                         required=True,
                         type=int,
