@@ -15,6 +15,7 @@ from utils import num_to_adj
 #BGG_URL="https://boardgamegeek.com/article/create/thing/147020/194"
 
 DC_OVERRIDES = {
+    'Amaroid': {'BGG Name': 'Amaroid'},
     'horowits': {'BGG Name': 'horowits'}
 }
 
