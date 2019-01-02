@@ -6,7 +6,7 @@ import string
 from utils import TableReader, parse_cell_string
 
 CORESETS = 'VW'
-FORMATS = 'G1BEHF2CKU'
+FORMATS = 'G1BEHF2CKUAM'
 COLNAMES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 PLAYER_ALIASES = {

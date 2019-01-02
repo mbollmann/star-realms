@@ -43,7 +43,8 @@ class TableReader:
             j0 = 0
             for j, td in enumerate(tr.find_all("td")):
                 if j0 in rowspan:
-                    td.insert_before(self._soup.new_tag("td"))
+                    new_td = self._soup.new_tag("td", class_="{}-{}".format(i, j))
+                    td.insert_before(new_td)
                     if rowspan[j0] == 1:
                         del rowspan[j0]
                     else:
@@ -52,7 +53,7 @@ class TableReader:
                 if 'colspan' in td.attrs:
                     span = int(td['colspan'])
                     for _ in range(span - 1):
-                        td.insert_after(self._soup.new_tag("td"))
+                        td.insert_after(self._soup.new_tag("td", class_="{}-{}".format(i, j)))
                     del td['colspan']
                     j0 += span - 1
                 if 'rowspan' in td.attrs:
