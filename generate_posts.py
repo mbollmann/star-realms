@@ -22,7 +22,8 @@ DC_OVERRIDES = {
 def baseset_reminder(core):
     sets = {
         'V': 'Core Set',
-        'W': 'Colony Wars'
+        'W': 'Colony Wars',
+        '?': '(not determined yet)'
         }
     reminder = [sets[c] for c in core]
     return ' + '.join(reminder)
