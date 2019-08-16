@@ -5,7 +5,7 @@ import os
 import string
 from utils import TableReader, parse_cell_string
 
-CORESETS = 'VW'
+CORESETS = 'VWR'
 FORMATS = 'G1BEHF2CKUAM'
 COLNAMES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 

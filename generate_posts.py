@@ -23,6 +23,7 @@ def baseset_reminder(core):
     sets = {
         'V': 'Core Set',
         'W': 'Colony Wars',
+        'R': 'Frontiers',
         '?': '(not determined yet)'
         }
     reminder = [sets[c] for c in core]
