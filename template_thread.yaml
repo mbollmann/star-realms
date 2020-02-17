@@ -17,6 +17,8 @@ post_template:
   [c][b][u]Card Sets[/u][/b]
   V	Core Set
   W	Colony Wars
+  R	Frontiers
+
   G	Gambits
   1	Year 1 Promos
   B	Crisis: Bases and Battleships
@@ -25,10 +27,12 @@ post_template:
   F	Crisis: Fleets and Fortresses
   C	Cosmic Gambits
   2	Year 2 Promos
-  K	United: Combat
+  K	United: Command
   U	United: Heroes
   A	United: Assault
-  M	United: Missions[/c]
+  M	United: Missions
+  L	Stellar Allies
+  [/c]
 
 
   [b]If you have any questions[/b], please don't hesitate to post them (or geekmail your DC, if you prefer).
@@ -51,7 +55,7 @@ post_template:
 bye_notice: "Note: [b]${bye_player}[/b] is not a player. This division only has 11 players, so if no replacement is found, one player each round will not have an assigned match."
 format:
   single_format: "Games in this division should be played as [b][u]Type ${format}.[/u][/b]"
-  coreset_reminder: "Games in this division [b]should always be played with [u]${core}[/u] ${basesets}[/b] (${basesetreminder}).\n\n"
+  coreset_reminder: "Games in this division are generally played with [u]${core}[/u] ${basesets} (${basesetreminder}).\n\n"
   dual_format: "Games generally use expansions ${format}."
   dual_format_empty: "Games generally don't use any (further) expansions."
   no_format: "There is no set format for expansions."

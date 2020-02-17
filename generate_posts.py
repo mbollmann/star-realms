@@ -48,6 +48,7 @@ class PostGenerator:
                                        basesetreminder=baseset_reminder(core))
         # single_format, dual_format, or no_format?
         if len(prefs) == 1 and prefs['NP'] > 0:
+            # Is this the edge case of an all-NP division? I think that's what this is.
             format_ = coretext + self.template['format']['no_format']
         else:
             if len(prefs) == 1:
@@ -68,14 +69,10 @@ class PostGenerator:
                     exptext = self.template['format']['dual_format_empty']
                 format_ = coretext + exptext
             else:
-                #expl = Template(self.template['format']['lcd_explanation'])
-                #prefset = set(prefs.keys()) - set(('NP',))
-                #a, b = prefset.pop(), prefset.pop()
-                #c = lcd(a, b)
-                #c = "expansions {}".format(c) if c else "no expansions"
                 format_ = coretext
                 format_ += self.template['format']['no_format']
                 format_ += " " + self.template['format']['lcd_explanation'] #expl.substitute(a=a, b=b, c=c)
+
         # more than one NP player?
         if prefs['NP'] > 1:
             format_ += " " + self.template['format']['no_pref']
